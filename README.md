@@ -34,18 +34,19 @@ Ensure you have the following installed on your machine:
    git clone https://github.com/AkarshanGhosh/E-book_MERN_app.git
    cd E-book_MERN_app
 
-## Git Commands
+### Git command
+1. Fetch the latest changes from the main branch
+   ```bash
+   git fetch origin main
+   
+3. Pull the latest changes from the main branch
+   ```bash
+   git pull origin main
+   
+5. Push your changes to the main branch
+   ```bash
+   git add .
+   git commit -m "Your commit message"
+   git push origin main
 
-### Fetch the latest changes from the main branch
-```bash
-git fetch origin main
 
-### Pull the latest changes from the main branch
-```bash
-git pull origin main
-
-### Push your changes to the main branch
-```bash
-git add .
-git commit -m "Your commit message"
-git push origin main
