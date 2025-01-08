@@ -4,47 +4,53 @@ import userModel from '../models/userModel.js';
 import transporter from '../config/nodemailer.js';
 import mongoose from 'mongoose';
 
+export const register = async (req, res) => {
+    const { name, email, password, isAdmin } = req.body;
 
-//Register
-export const register =async (req, res) => {
-    const {name, email, password} = req.body;
-    
-    if(!name || !email || !password){
-        return res.json({success: false, message: "Missing Details"});
+    if (!name || !email || !password) {
+        return res.json({ success: false, message: "Missing Details" });
     }
-    try{
-        const existingUser= await userModel.findOne({email})
-        if(existingUser){
-            return res.json({success: false, message: "User already exists"});
+
+    try {
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.json({ success: false, message: "User already exists" });
         }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        //creating user 
+        // Dynamically set isAdmin, default to false if not provided
         const user = new userModel({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            isAdmin: isAdmin === true // Explicitly check for boolean true
         });
+
         await user.save();
-        
-        const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET, {expiresIn: "7d"});
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-            maxAge: 7*24*60*60*1000
-        });
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-        //To send email to the user
+        // Conditional email template based on isAdmin
+        let mailOptions;
 
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: email,
-            subject: "Welcome to E-book ",
-            text: `Welcome to test website. You have successfully registered with email id: ${email}`
+        if (user.isAdmin) {
+            mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: email,
+                subject: "Welcome Admin to E-book!",
+                text: `Hello ${name},\n\nWelcome to the E-book platform as an Admin! You have successfully registered with the email: ${email}. We're excited to have you on board.\n\nBest Regards,\nE-book Team`
+            };
+        } else {
+            mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: email,
+                subject: "Welcome to E-book!",
+                text: `Hello ${name},\n\nWelcome to the E-book platform! You have successfully registered with the email: ${email}. We're glad to have you here.\n\nBest Regards,\nE-book Team`
+            };
         }
 
+        // Send the email
         try {
             await transporter.sendMail(mailOptions);
             console.log('Email sent successfully');
@@ -52,13 +58,11 @@ export const register =async (req, res) => {
             console.error('Error sending email:', error);
         }
 
-        return res.json({success: true, message: "Regestration Successful"});
-
-
-    }catch(error){
-        res.json({success: false, message: error.message});
+        return res.json({ success: true, message: "User registered successfully", token });
+    } catch (error) {
+        return res.json({ success: false, message: "Error in registration", error });
     }
-}
+};
 
 //Login
 export const login = async (req, res) => {
