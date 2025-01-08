@@ -1,3 +1,4 @@
+#LegalReads
 # E-Book Platform for Legal Resources and Case Management
 
 Welcome to the **E-Book Platform for Legal Resources and Case Management**! This platform provides a comprehensive collection of books, documents, and other resources tailored for legal professionals to manage cases and access legal materials efficiently.
