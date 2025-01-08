@@ -1,7 +1,7 @@
 
-# LegalReads
+# Legal Reads
 
-Welcome to the ** LegalReads a E-Book Platform for Legal Resources and Case Management**! This platform provides a comprehensive collection of books, documents, and other resources tailored for legal professionals to manage cases and access legal materials efficiently.
+Welcome to the  LegalReads a E-Book Platform for Legal Resources and Case Management**! This platform provides a comprehensive collection of books, documents, and other resources tailored for legal professionals to manage cases and access legal materials efficiently.
 
 ## Features
 
