@@ -41,10 +41,16 @@ export const register =async (req, res) => {
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
             to: email,
-            subject: "Welcome to MERN Auth",
+            subject: "Welcome to E-book ",
             text: `Welcome to test website. You have successfully registered with email id: ${email}`
         }
-        await transporter.sendMail(mailOptions);
+
+        try {
+            await transporter.sendMail(mailOptions);
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
 
         return res.json({success: true, message: "Regestration Successful"});
 
