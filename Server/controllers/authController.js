@@ -285,3 +285,63 @@ export const resetPassword = async (req, res) => {
         return res.json({success: false, message: error.message});
     }
 };
+
+//Admin Login
+export const adminLogin = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.json({ success: false, message: "Email and Password are required" });
+    }
+
+    try {
+        // Find the user by email
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            return res.json({ success: false, message: "Invalid Email or Password" });
+        }
+
+        // Check if the user is an admin
+        if (!user.isAdmin) {
+            return res.json({ success: false, message: "The provided email does not belong to an admin." });
+        }
+
+        // Verify the password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.json({ success: false, message: "Invalid Email or Password" });
+        }
+
+        // Generate an OTP
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        user.verifyOtp = otp;
+        user.verifyOtpExpires = Date.now() + 15 * 60 * 1000; // OTP valid for 15 minutes
+        await user.save();
+
+        // Send the OTP to the admin's email
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: email,
+            subject: "Admin Login OTP",
+            text: `Hello Admin,\n\nYour OTP for logging into the admin panel is ${otp}. Please use this OTP within 15 minutes to complete your login.\n\nBest Regards,\nE-book Team`
+        };
+
+        try {
+            await transporter.sendMail(mailOptions);
+            console.log('OTP email sent to admin');
+        } catch (emailError) {
+            console.error('Error sending OTP email:', emailError);
+            return res.json({ success: false, message: "Failed to send OTP email" });
+        }
+
+        // Generate a JWT token for the admin
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+        return res.json({ success: true, message: "Admin login successful. OTP sent to your email.", token });
+
+    } catch (error) {
+        console.error("Error during admin login:", error);
+        return res.json({ success: false, message: "An error occurred during admin login" });
+    }
+};
