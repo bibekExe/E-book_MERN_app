@@ -14,14 +14,14 @@ const userSchema = new mongoose.Schema(
         readLater: [
             {
                 type: mongoose.Schema.Types.ObjectId, // Array of ObjectId references
-                ref: "resources",
+                ref: "resource",
                 default: [], // Initialize as an empty array
             },
         ],
         history: [
             {
                 type: mongoose.Schema.Types.ObjectId, // Array of ObjectId references
-                ref: "resources",
+                ref: "resource",
                 default: [], // Initialize as an empty array
             },
         ],
