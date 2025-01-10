@@ -348,3 +348,55 @@ export const adminLogin = async (req, res) => {
         return res.json({ success: false, message: "An error occurred during admin login" });
     }
 };
+
+//Admin otp verification 
+
+export const adminVerifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
+
+    // Validate inputs
+    if (!email || !otp) {
+        return res.status(400).json({ success: false, message: "Email and OTP are required" });
+    }
+
+    try {
+        // Find the admin user by email
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Admin not found" });
+        }
+
+        // Check if the user is an admin
+        if (!user.isAdmin) {
+            return res.status(403).json({ success: false, message: "Access denied. Not an admin account." });
+        }
+
+        // Verify OTP
+        if (user.verifyOtp !== otp || !user.verifyOtp) {
+            return res.status(400).json({ success: false, message: "Invalid OTP" });
+        }
+
+        // Check if OTP has expired
+        if (user.verifyOtpExpires < Date.now()) {
+            return res.status(400).json({ success: false, message: "OTP has expired" });
+        }
+
+        // Clear OTP fields after successful verification
+        user.verifyOtp = null;
+        user.verifyOtpExpires = null;
+        await user.save();
+
+        // Generate a new JWT token for the admin
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+        return res.status(200).json({
+            success: true,
+            message: "Admin OTP verified successfully. Login complete.",
+            token,
+        });
+    } catch (error) {
+        console.error("Error during admin OTP verification:", error);
+        return res.status(500).json({ success: false, message: "An error occurred during OTP verification" });
+    }
+};
