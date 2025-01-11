@@ -1,8 +1,12 @@
-import React from 'react'
+//import React from 'react'
+import Body from "../components/home/body"
 
 const Home = () => {
   return (
-    <div >Home</div>
+    <div 
+    className="bg-zinc-900 text-white px-10 py-8" >
+      <Body />
+    </div>
   )
 }
 
