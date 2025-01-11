@@ -1,6 +1,6 @@
 //import React from 'react'
 
-const resource = () => {
+const Resource = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const resource = () => {
   )
 }
 
-export default resource
+export default Resource
