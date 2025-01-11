@@ -8,9 +8,7 @@ function Body() {
         <h1 className="text-4xl lg:text-6xl font-semibold text-yellow-100 text-center lg:text-left">
           Welcome to Legal Read
         </h1>
-        <h2 className="mt-3 text-xl lg:text-3xl font-medium text-yellow-400 text-center lg:text-left">
-          Your Trusted Hub for Comprehensive Legal Resources
-        </h2>
+        
         <p className="mt-4 text-lg lg:text-xl text-zinc-400 text-center lg:text-left">
           In a world where laws shape our lives, having access to reliable and
           well-organized legal information is essential. At Legal Read, we bring
