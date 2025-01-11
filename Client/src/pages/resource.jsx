@@ -3,7 +3,7 @@
 const Resource = () => {
   return (
     <div>
-      
+      resource
     </div>
   )
 }
