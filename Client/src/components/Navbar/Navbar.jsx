@@ -7,10 +7,7 @@ const Navbar = () => {
       title: "Home",
       link: "/",
     },
-    {
-      title: "About Us",
-      link: "/about-us",
-    },
+    
     {
       title: "Resources",
       link: "/resources",
