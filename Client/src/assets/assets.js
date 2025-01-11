@@ -8,6 +8,7 @@ import menu from './menu-white.png'
 import close from './close-white.png'
 import books_img from './books.svg'
 import favicon from './favicon.svg'
+import justice from './justice.png'
 
 
 export const assets = {
@@ -20,6 +21,7 @@ export const assets = {
     menu,
     close,
     books_img,
-    favicon
+    favicon,
+    justice
     
 }
