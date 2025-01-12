@@ -59,36 +59,44 @@ export const register = async (req, res) => {
 // Login
 export const login = async (req, res) => {
     const { email, password } = req.body;
+
+    // Check for missing fields
     if (!email || !password) {
-        return res.json({ success: false, message: "Email and Password are required" });
+        return res.status(400).json({ success: false, message: "Email and Password are required" });
     }
 
     try {
+        // Find the user by email
         const user = await userModel.findOne({ email });
         if (!user) {
-            return res.json({ success: false, message: "Invalid Email or Password" });
+            return res.status(401).json({ success: false, message: "Invalid Email or Password" });
         }
 
+        // Verify the password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.json({ success: false, message: "Invalid Email or Password" });
+            return res.status(401).json({ success: false, message: "Invalid Email or Password" });
         }
 
+        // Generate a JWT token
         const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
+        // Set the token in a cookie
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
-        return res.json({ success: true, message: "Login Successful", token });
+        // Respond with success
+        return res.status(200).json({ success: true, message: "Login Successful", token });
     } catch (error) {
         console.error("Error during login:", error.message);
-        return res.json({ success: false, message: error.message });
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
 
 // Logout
 export const logout = (req, res) => {
