@@ -63,7 +63,7 @@ const ProfileBody = () => {
       <div className="w-3/4 p-8">
         <h1 className="text-3xl font-bold text-yellow-400 mb-6">Welcome, {userData?.name}</h1>
         <p className="text-lg text-zinc-300">
-          Here you can view your "Read Later" items, manage your downloads, and update your profile settings.
+          Here you can view your Read Later items, manage your downloads, and update your profile settings.
         </p>
       </div>
     </div>
