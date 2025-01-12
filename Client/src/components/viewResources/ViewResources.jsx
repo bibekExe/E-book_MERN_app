@@ -91,8 +91,8 @@ const ViewResources = () => {
               </a>
 
               <a
-                href={data.link}
-                target="_blank"
+                href={data.url} // Use the resource's URL for redirection
+                target="_blank" // Open in a new tab
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-all duration-300 cursor-pointer text-lg"
               >
