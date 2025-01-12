@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import Loader from "../Loder";
 import { FaBookReader, FaFileDownload, FaReadme } from "react-icons/fa";
@@ -9,6 +10,8 @@ const ViewResources = () => {
   const [data, setData] = useState(null); // Initialize as null
   const [loading, setLoading] = useState(true); // Track loading state
   const [error, setError] = useState(false); // Track error state
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); // Check if user is logged in
+  const [notification, setNotification] = useState(""); // Notification message
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +30,13 @@ const ViewResources = () => {
 
     fetchData();
   }, [id]); // Add `id` to dependency array
+
+  const handleRestrictedAction = (actionName) => {
+    if (!isLoggedIn) {
+      setNotification(`You need to sign in to ${actionName}.`);
+      setTimeout(() => setNotification(""), 3000); // Clear notification after 3 seconds
+    }
+  };
 
   // Render loading state
   if (loading) {
@@ -50,6 +60,13 @@ const ViewResources = () => {
   return (
     data && (
       <div className="h-full w-full bg-zinc-900 flex flex-col items-start px-8 py-8">
+        {/* Notification */}
+        {notification && (
+          <div className="w-full max-w-lg mx-auto p-4 bg-red-500 text-white text-center font-bold rounded-lg mb-6">
+            {notification}
+          </div>
+        )}
+
         {/* Main Content Box */}
         <div className="flex flex-col lg:flex-row w-full max-w-6xl bg-zinc-800 rounded-lg p-6">
           {/* Image Section */}
@@ -74,31 +91,44 @@ const ViewResources = () => {
 
             {/* Buttons Section */}
             <div className="mt-8 flex flex-wrap gap-6">
-              <button className="flex items-center gap-2 px-6 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-600 transition-all duration-300 cursor-pointer text-lg">
+              {/* Read Later Button */}
+              <button
+                onClick={() => handleRestrictedAction("save the book to Read Later")}
+                className={`flex items-center gap-2 px-6 py-3 ${
+                  isLoggedIn
+                    ? "bg-yellow-500 hover:bg-yellow-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-black font-bold rounded-lg transition-all duration-300 text-lg`}
+              >
                 <FaBookReader size={20} />
                 Read Later
               </button>
 
-              <a
-                href={data.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
-                className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-all duration-300 cursor-pointer text-lg"
+              {/* Download Button */}
+              <button
+                onClick={() => handleRestrictedAction("download the book")}
+                className={`flex items-center gap-2 px-6 py-3 ${
+                  isLoggedIn
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-white font-bold rounded-lg transition-all duration-300 text-lg`}
               >
                 <FaFileDownload size={20} />
                 Download
-              </a>
+              </button>
 
-              <a
-                href={data.url} // Use the resource's URL for redirection
-                target="_blank" // Open in a new tab
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-all duration-300 cursor-pointer text-lg"
+              {/* Read Now Button */}
+              <button
+                onClick={() => handleRestrictedAction("read the book")}
+                className={`flex items-center gap-2 px-6 py-3 ${
+                  isLoggedIn
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-white font-bold rounded-lg transition-all duration-300 text-lg`}
               >
                 <FaReadme size={20} />
                 Read Now
-              </a>
+              </button>
             </div>
           </div>
         </div>
