@@ -1,3 +1,4 @@
+import ProfileBody from "../components/Profile/ProfileBody.jsx";
 import ReadLater from "../components/Profile/ReadLater";
 import Settings from "../components/Profile/settings.jsx";
 
@@ -8,6 +9,7 @@ const Profile = () => {
       
       
       <div className="flex-grow px-10 py-8">
+        <ProfileBody />
         <ReadLater />
         <Settings />
       </div>

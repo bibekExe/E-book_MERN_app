@@ -32,14 +32,14 @@ const Navbar = () => {
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   const links = [
-  ...(isAdmin
-    ? [{ title: "Dashboard", link: "/admin-dashboard" }]
-    : [
-        ...(isLoggedIn ? [{ title: "Profile", link: "/profile" }] : []),
-        { title: "Home", link: "/" },
-        { title: "Resources", link: "/resources" },
-      ]),
-];
+    ...(isAdmin
+      ? [{ title: "Dashboard", link: "/admin-dashboard" }]
+      : [
+          ...(isLoggedIn ? [{ title: "Profile", link: "/profile" }] : []),
+          { title: "Home", link: "/" },
+          { title: "Resources", link: "/resources" },
+        ]),
+  ];
 
   return (
     <div className="bg-zinc-800 text-white px-8 py-4">
@@ -51,11 +51,11 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden lg:flex gap-6">
+        <div className="hidden lg:flex gap-8">
           {links.map((item, i) => (
             <Link
               to={item.link}
-              className="hover:text-blue-500 transition-all duration-300"
+              className="text-xl px-4 py-2 hover:text-blue-500 transition-all duration-300"
               key={i}
             >
               {item.title}
@@ -65,13 +65,13 @@ const Navbar = () => {
             <>
               <Link
                 to="/login"
-                className="px-4 py-2 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300"
+                className="text-xl px-6 py-2 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300"
               >
                 Log In
               </Link>
               <Link
                 to="/signup"
-                className="px-4 py-2 bg-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300"
+                className="text-xl px-6 py-2 bg-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300"
               >
                 Sign Up
               </Link>
@@ -80,7 +80,7 @@ const Navbar = () => {
           {isLoggedIn && (
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-red-500 rounded hover:bg-red-600 duration-300"
+              className="text-xl px-6 py-2 bg-red-500 rounded hover:bg-red-600 duration-300"
             >
               Log Out
             </button>
@@ -105,7 +105,7 @@ const Navbar = () => {
             {links.map((item, i) => (
               <Link
                 to={item.link}
-                className="hover:text-blue-500 transition-all duration-300"
+                className="text-lg px-6 py-2 hover:text-blue-500 transition-all duration-300"
                 key={i}
                 onClick={toggleMenu} // Close menu after clicking a link
               >
@@ -116,14 +116,14 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="w-full max-w-xs px-4 py-2 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300 text-center"
+                  className="w-full max-w-xs text-lg px-6 py-2 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300 text-center"
                   onClick={toggleMenu}
                 >
                   Log In
                 </Link>
                 <Link
                   to="/signup"
-                  className="w-full max-w-xs px-4 py-2 bg-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300 text-center"
+                  className="w-full max-w-xs text-lg px-6 py-2 bg-blue-500 rounded hover:bg-white hover:text-zinc-800 duration-300 text-center"
                   onClick={toggleMenu}
                 >
                   Sign Up
@@ -133,7 +133,7 @@ const Navbar = () => {
             {isLoggedIn && (
               <button
                 onClick={handleLogout}
-                className="w-full max-w-xs px-4 py-2 bg-red-500 rounded hover:bg-red-600 duration-300 text-center"
+                className="w-full max-w-xs text-lg px-6 py-2 bg-red-500 rounded hover:bg-red-600 duration-300 text-center"
               >
                 Log Out
               </button>

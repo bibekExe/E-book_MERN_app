@@ -386,3 +386,42 @@ export const adminVerifyOtp = async (req, res) => {
         return res.status(500).json({ success: false, message: "An error occurred during OTP verification" });
     }
 };
+
+
+// Fetch User Data by ID
+export const getUserById = async (req, res) => {
+    const userId = req.headers.id; // Extract 'id' from headers
+  
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
+    }
+  
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, message: "Invalid User ID" });
+    }
+  
+    try {
+      const user = await userModel.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        userData: {
+          avatar: user.avatar,
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          isAccountVerified: user.isAccountVerified,
+          history: user.history,
+          readLater: user.readLater,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  };
