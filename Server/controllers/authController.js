@@ -9,13 +9,13 @@ export const register = async (req, res) => {
     const { name, email, password, isAdmin } = req.body;
 
     if (!name || !email || !password) {
-        return res.json({ success: false, message: "Missing Details" });
+        return res.status(400).json({ success: false, message: "Missing Details" });
     }
 
     try {
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
-            return res.json({ success: false, message: "User already exists" });
+            return res.status(400).json({ success: false, message: "User already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -46,13 +46,13 @@ export const register = async (req, res) => {
             console.log('Email sent successfully');
         } catch (error) {
             console.error('Error sending email:', error.message);
-            return res.json({ success: false, message: "Registration successful, but email sending failed." });
+            return res.status(500).json({ success: false, message: "Registration successful, but email sending failed." });
         }
 
-        return res.json({ success: true, message: "User registered successfully", token });
+        return res.status(201).json({ success: true, message: "User registered successfully", token });
     } catch (error) {
         console.error("Error during registration:", error.message);
-        return res.json({ success: false, message: "Error in registration", error: error.message });
+        return res.status(500).json({ success: false, message: "Error in registration", error: error.message });
     }
 };
 

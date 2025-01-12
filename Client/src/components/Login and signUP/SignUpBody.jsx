@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignUpBody = () => {
   const [values, setValues] = useState({
@@ -6,6 +8,9 @@ const SignUpBody = () => {
     email: "",
     password: "",
   });
+  const [message, setMessage] = useState(""); // To display notifications
+  const [messageType, setMessageType] = useState(""); // success or error
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -14,19 +19,38 @@ const SignUpBody = () => {
       [id]: value,
     }));
   };
-  const submit = async () =>{
+
+  const submit = async (e) => {
+    e.preventDefault();
+
     try {
-      if(values.name === "" || values.email=== "" || values.password ==="")
-      {
-        alert("All fields are required");
-      }else{
-        console.log(values);
+      if (!values.name || !values.email || !values.password) {
+        setMessageType("error");
+        setMessage("All fields are required.");
+        return;
+      }
+
+      const response = await axios.post("http://localhost:3000/api/auth/register", {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+
+      if (response.data.success) {
+        setMessageType("success");
+        setMessage(response.data.message); // Show success message
+        setTimeout(() => navigate("/login"), 2000); // Redirect to login after 2 seconds
       }
     } catch (error) {
-      console.log(error)
+      if (error.response) {
+        setMessageType("error");
+        setMessage(error.response.data.message); // Show error message from backend
+      } else {
+        setMessageType("error");
+        setMessage("Something went wrong. Please try again.");
+      }
     }
-
-  }
+  };
 
   return (
     <div className="h-auto lg:h-[75vh] flex flex-col-reverse lg:flex-row items-center lg:items-center px-4 lg:px-16">
@@ -38,19 +62,16 @@ const SignUpBody = () => {
         </p>
       </div>
 
-      {/* Right Section (Sign Up Form) */}
+      {/* Right Section (Sign-Up Form) */}
       <div className="w-full lg:w-1/2 flex items-center justify-center">
         <div className="w-full max-w-md bg-zinc-800 p-8 rounded-lg shadow-lg">
           <h2 className="text-3xl font-semibold text-yellow-100 mb-6 text-center">
             Sign Up
           </h2>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={submit}>
             {/* Name Field */}
             <div>
-              <label
-                htmlFor="name"
-                className="block text-zinc-400 font-medium mb-2"
-              >
+              <label htmlFor="name" className="block text-zinc-400 font-medium mb-2">
                 Name
               </label>
               <input
@@ -66,10 +87,7 @@ const SignUpBody = () => {
 
             {/* Email Field */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-zinc-400 font-medium mb-2"
-              >
+              <label htmlFor="email" className="block text-zinc-400 font-medium mb-2">
                 Email Address
               </label>
               <input
@@ -85,10 +103,7 @@ const SignUpBody = () => {
 
             {/* Password Field */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-zinc-400 font-medium mb-2"
-              >
+              <label htmlFor="password" className="block text-zinc-400 font-medium mb-2">
                 Password
               </label>
               <input
@@ -101,14 +116,27 @@ const SignUpBody = () => {
                 onChange={handleChange}
               />
             </div>
+
             {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-yellow-500 text-zinc-900 font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition-all duration-300"
-              onClick={submit}>
+            >
               Sign Up
             </button>
           </form>
+
+          {/* Notification Message */}
+          {message && (
+            <p
+              className={`mt-4 text-center font-semibold ${
+                messageType === "success" ? "text-green-400" : "text-red-400"
+              }`}
+            >
+              {message}
+            </p>
+          )}
+
           <p className="mt-4 text-center text-zinc-400">
             Already have an account?{" "}
             <a href="/login" className="text-yellow-400 hover:underline">
