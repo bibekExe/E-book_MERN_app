@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const MobileNav = () => {
   return (
-    <div className= "full flex lg:hidden  items-center justify-between at-4" >
+    <> 
+    {role === "user" && (
+       <div className= "full flex lg:hidden  items-center justify-between at-4" >
     <Link
      to="/profile"
      className="text-zinc-100 font -semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
@@ -20,6 +23,28 @@ const MobileNav = () => {
         >Settings
         </Link>
         </div>
+    )}
+     {role === "admin" && (
+       <div className= "full flex lg:hidden  items-center justify-between at-4" >
+    <Link
+     to="/profile"
+     className="text-zinc-100 font -semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
+     >Add Resources
+     </Link>
+     <Link 
+        to="/Profile/UpdateResources"
+        className="text-zinc-100 font-semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
+    >Update Resources
+    </Link>
+    <Link
+        to="/Profile/Settings"
+        className="text-zinc-100 font-semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
+        >Settings
+        </Link>
+        </div>
+    )}
+        </>
+   
   )
 }
 
