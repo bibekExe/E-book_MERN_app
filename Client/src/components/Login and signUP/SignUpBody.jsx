@@ -1,13 +1,40 @@
-//import React from "react";
+import { useState } from "react";
 
 const SignUpBody = () => {
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
+  };
+  const submit = async () =>{
+    try {
+      if(values.name === "" || values.email=== "" || values.password ==="")
+      {
+        alert("All fields are required");
+      }else{
+        console.log(values);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   return (
     <div className="h-auto lg:h-[75vh] flex flex-col-reverse lg:flex-row items-center lg:items-center px-4 lg:px-16">
       {/* Left Section */}
       <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-center mt-8 lg:mt-0">
         <p className="mt-4 text-lg lg:text-xl text-zinc-400 text-center lg:text-left">
-          Create an account and join the Legal Read community to explore our curated
-          collection of legal resources designed for your needs.
+          Create an account and join the Legal Read community to explore our
+          curated collection of legal resources designed for your needs.
         </p>
       </div>
 
@@ -31,6 +58,9 @@ const SignUpBody = () => {
                 id="name"
                 className="w-full px-4 py-2 text-zinc-900 rounded-lg bg-zinc-200 focus:outline-none focus:ring focus:ring-yellow-400"
                 placeholder="Enter your name"
+                required
+                value={values.name}
+                onChange={handleChange}
               />
             </div>
 
@@ -47,6 +77,9 @@ const SignUpBody = () => {
                 id="email"
                 className="w-full px-4 py-2 text-zinc-900 rounded-lg bg-zinc-200 focus:outline-none focus:ring focus:ring-yellow-400"
                 placeholder="Enter your email"
+                required
+                value={values.email}
+                onChange={handleChange}
               />
             </div>
 
@@ -63,14 +96,16 @@ const SignUpBody = () => {
                 id="password"
                 className="w-full px-4 py-2 text-zinc-900 rounded-lg bg-zinc-200 focus:outline-none focus:ring focus:ring-yellow-400"
                 placeholder="Enter your password"
+                required
+                value={values.password}
+                onChange={handleChange}
               />
             </div>
-
             {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-yellow-500 text-zinc-900 font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition-all duration-300"
-            >
+              onClick={submit}>
               Sign Up
             </button>
           </form>

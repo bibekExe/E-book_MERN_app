@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { assets } from "../../assets/assets";
+import { useSelector} from "react-redux"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,12 @@ const Navbar = () => {
     { title: "Profile", link: "/profile" },
     { title: "Contact Us", link: "/contact-us" },
   ];
+  
+  const isLoggedIn =useSelector((state) => state.auth.isLoggedIn) ;
+  if(isLoggedIn === false){
+    links.splice(2, 1); // Remove "Profile"
+    
+  }
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);

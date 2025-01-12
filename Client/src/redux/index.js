@@ -1,1 +1,0 @@
-import {configureResource} from @reduxjs/toolkit
