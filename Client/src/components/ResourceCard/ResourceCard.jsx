@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const ResourceCard = ({ data }) => {
-  console.log(data);
+  
 
   return (
-    <Link>
+    <Link to={`/view-resource-details/${data._id}`}>
       <div className="bg-zinc-800 rounded p-4 flex flex-col">
         <div className="bg-zinc-900 rounded flex items-center justify-center">
           <img
@@ -31,6 +31,7 @@ ResourceCard.propTypes = {
     author: PropTypes.string,
     image: PropTypes.string,
     category:PropTypes.string,
+    _id: PropTypes.string,
   }).isRequired,
 };
 

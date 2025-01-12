@@ -9,6 +9,7 @@ import ContactUs from './pages/ContactUs';
 import Profile from './pages/Profile';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ViewResources from './components/viewResources/ViewResources';
 
 const App = () => {
   return (
@@ -23,7 +24,8 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/profile" element={<Profile />} />
-            {/* Fallback Route for 404 */}
+            <Route path="view-resource-details/:id" element={<ViewResources />} />
+            
             <Route path="*" element={<div className="text-center py-16 text-red-600 text-xl">404 - Page Not Found</div>} />
           </Routes>
         </div>
