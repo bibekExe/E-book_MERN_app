@@ -11,9 +11,8 @@ const RecentlyAdded = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "/api/resource/get-recently-added-resource"
+          "https://e-book-mern-app.onrender.com/api/resource/get-recently-added-resource"
         );
-        console.log(response.data);
         setData(response.data.data);
       } catch (error) {
         console.error("Error fetching recently added resources:", error);
