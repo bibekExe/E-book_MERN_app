@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import ForgetPassword from "../Login and signUP/ForgetPassword"; // Adjusted import path
 
 const Settings = () => {

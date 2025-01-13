@@ -8,7 +8,7 @@ const ProfileBody = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [activeSection, setActiveSection] = useState(""); // State to manage active section
+  const [activeSection, setActiveSection] = useState("profile"); // Set "profile" as the default active section
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -63,10 +63,9 @@ const ProfileBody = () => {
           </div>
         );
       case "readLater":
-        return <UnderConstruction /> //<div className="text-lg text-white">Books added to read later...</div>; //Render Read Later
+        return <UnderConstruction />; // Render UnderConstruction for Read Later
       case "downloads":
-        return <UnderConstruction /> // Render Download
-      
+        return <UnderConstruction />; // Render UnderConstruction for Downloads
       case "settings":
         return <Settings />; // Render Settings component
       default:
