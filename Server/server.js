@@ -18,12 +18,11 @@ connectDB();
 // Define allowed origins for CORS
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://clinquant-cuchufli-da38a3.netlify.app',
-    'https://e-book-mern-app.vercel.app'
+    'https://clinquant-cuchufli-da38a3.netlify.app' // Add deployed frontend URL
 ];
 
-// Middleware
-app.use(cors({
+// Configure CORS options
+const corsOptions = {
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -31,32 +30,13 @@ app.use(cors({
             callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ['GET', 'POST'], // Allowed methods
-    credentials: true, // Allow credentials
-}));
-app.options('*', (req, res) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Methods', 'GET,POST');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-        return res.sendStatus(204);
-    } else {
-        return res.status(403).send('CORS not allowed');
-    }
-});
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
-
-// Global middleware for missing CORS headers
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    next();
-});
+app.use(cors(corsOptions));
 
 // API Endpoints
 app.get('/', (req, res) => res.send("API is running"));
@@ -65,15 +45,5 @@ app.use('/api/user', userRouter);
 app.use('/api/resource', resourceRouter);
 app.use('/api/readlater', readLaterRouter);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    if (err instanceof Error) {
-        console.error(err.message);
-        res.status(500).json({ error: err.message });
-    } else {
-        next();
-    }
-});
-
 // Start the server
-app.listen(port, '0.0.0.0', () => console.log(`Server is running on port: ${port}`));
+app.listen(port, () => console.log(`Server is running on port: ${port}`));
