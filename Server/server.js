@@ -18,7 +18,7 @@ connectDB();
 // Define allowed origins
 const allowedOrigins = [
   "http://localhost:5173", // Local development
-  "https://e-book-mern-app.vercel.app", // Production frontend
+  "https://e-book-mern-app.vercel.app/", // Deployed Vercel frontend
 ];
 
 // Configure CORS
@@ -27,8 +27,7 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true); // Allow the request
     } else {
-      console.error(`Blocked by CORS: ${origin}`);
-      callback(new Error("Not allowed by CORS")); // Deny the request
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true, // Allow cookies or authentication headers
