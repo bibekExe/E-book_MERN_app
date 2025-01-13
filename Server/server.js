@@ -14,21 +14,21 @@ const port = process.env.PORT || 3000;
 
 // Connect to MongoDB
 connectDB();
-
+const cors = require("cors");
 // Define allowed origins for CORS
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://clinquant-cuchufli-da38a3.netlify.app", // Add deployed frontend URL
-];
+//const allowedOrigins = [
+ // "http://localhost:5173",
+ // "https://clinquant-cuchufli-da38a3.netlify.app", // Add deployed frontend URL
+//];
 
 // Configure CORS options
-app.use(
-  cors({
-    origin: "https://e-book-mern-app.vercel.app/",
-    methods: ["GET", "POST", "UPDATE", "PUT"],
-    Credentials: true,
-  })
-);
+//app.use(
+  //cors({
+    //origin: "https://e-book-mern-app.vercel.app/",
+    //methods: ["GET", "POST", "UPDATE", "PUT"],
+   // Credentials: true,
+ // })
+//);
 
 // Middleware
 app.use(express.json());
