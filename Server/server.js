@@ -15,8 +15,27 @@ const port = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
+// Define allowed origins
+const allowedOrigins = [
+  "http://localhost:5173", // Local development
+  "https://e-book-mern-app.vercel.app", // Production frontend
+];
+
+// Configure CORS
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the request
+    } else {
+      console.error(`Blocked by CORS: ${origin}`);
+      callback(new Error("Not allowed by CORS")); // Deny the request
+    }
+  },
+  credentials: true, // Allow cookies or authentication headers
+};
+
 // Apply CORS Middleware
-app.use(cors()); // Enables CORS for all origins
+app.use(cors(corsOptions)); // Use restricted CORS options
 
 // Middleware
 app.use(express.json()); // Parse JSON payloads
