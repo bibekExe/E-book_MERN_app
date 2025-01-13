@@ -37,6 +37,7 @@ const corsOptions = {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // API Endpoints
 app.get('/', (req, res) => res.send("API is running"));
@@ -45,5 +46,15 @@ app.use('/api/user', userRouter);
 app.use('/api/resource', resourceRouter);
 app.use('/api/readlater', readLaterRouter);
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    if (err instanceof Error) {
+        console.error(err.message);
+        res.status(500).json({ error: err.message });
+    } else {
+        next();
+    }
+});
+
 // Start the server
-app.listen(port, () => console.log(`Server is running on port: ${port}`));
+app.listen(port, '0.0.0.0', () => console.log(`Server is running on port: ${port}`));
