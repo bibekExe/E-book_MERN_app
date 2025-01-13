@@ -15,30 +15,8 @@ const port = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
-// Define allowed origins for CORS
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://clinquant-cuchufli-da38a3.netlify.app", 
-  "https://e-book-mern-app.vercel.app",
-];
-
-// Configure CORS options
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow the request
-    } else {
-      console.error(`Blocked by CORS: ${origin}`);
-      callback(new Error("Not allowed by CORS")); // Deny the request
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
-  allowedHeaders: ["Content-Type", "auth-token"], // Allowed headers
-  credentials: true, // Enable cookies and credentials if needed
-};
-
-// Apply CORS middleware globally
-app.use(cors(corsOptions));
+// Apply CORS Middleware
+app.use(cors()); // Enables CORS for all origins
 
 // Middleware
 app.use(express.json()); // Parse JSON payloads
