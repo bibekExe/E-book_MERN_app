@@ -12,29 +12,35 @@ import readLaterRouter from "./routes/readLaterRoutes.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
-//Connect to MongoDB
+// Connect to MongoDB
 connectDB();
-const cors = require("cors");
- //Define allowed origins for CORS
+
+// Define allowed origins for CORS
 const allowedOrigins = [
   "http://localhost:5173",
   "https://clinquant-cuchufli-da38a3.netlify.app", // Add deployed frontend URL
-  "https://e-book-mern-app.vercel.app/"
+  "https://e-book-mern-app.vercel.app/",
 ];
 
- //Configure CORS options
-app.use(
-  cors({
-    origin: "https://e-book-mern-app.vercel.app/",
-    methods: ["GET", "POST", "UPDATE", "PUT"],
-    Credentials: true,
-  })
-);
+// Configure CORS options
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the request
+    } else {
+      console.error(`Blocked by CORS: ${origin}`);
+      callback(new Error("Not allowed by CORS")); // Deny the request
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+  allowedHeaders: ["Content-Type", "auth-token"], // Allowed headers
+  credentials: true, // Enable cookies and credentials if needed
+};
 
 // Middleware
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Apply CORS configuration
+app.use(express.json()); // Parse JSON payloads
+app.use(cookieParser()); // Parse cookies
 
 // API Endpoints
 app.get("/", (req, res) => res.send("API is running"));
