@@ -22,10 +22,13 @@ const allowedOrigins = [
 ];
 
 // Configure CORS options
-const corsOptions = {
+app.use(
+cors({
     origin: "https://e-book-mern-app.vercel.app/",
     methods: ['GET', 'POST','UPDATE','PUT'],
-};
+    Credentials: true,
+})
+)
 
 // Middleware
 app.use(express.json());
