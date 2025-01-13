@@ -24,7 +24,7 @@ const allowedOrigins = [
 // Configure CORS options
 const corsOptions = {
     origin: "https://e-book-mern-app.vercel.app/",
-    methods: ['GET', 'POST','UPDATE']
+    methods: ['GET', 'POST','UPDATE','PUT'],
 };
 
 // Middleware
