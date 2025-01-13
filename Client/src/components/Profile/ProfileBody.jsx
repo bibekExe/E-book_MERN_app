@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import Settings from "./settings"; // Import Settings component
+import UnderConstruction from "../UnderConstruction";
 
 const ProfileBody = () => {
   const [userData, setUserData] = useState(null);
@@ -62,9 +63,10 @@ const ProfileBody = () => {
           </div>
         );
       case "readLater":
-        return <div className="text-lg text-white">Books added to read later...</div>;
+        return <UnderConstruction /> //<div className="text-lg text-white">Books added to read later...</div>; //Render Read Later
       case "downloads":
-        return <div className="text-lg text-white">Your downloaded items...</div>;
+        return <UnderConstruction /> // Render Download
+      
       case "settings":
         return <Settings />; // Render Settings component
       default:
