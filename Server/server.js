@@ -26,19 +26,30 @@ const allowedOrigins = [
 const corsOptions = {
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
+            callback(null, true); // Allow the origin
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    methods: ['GET', 'POST'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true // Enable credentials (cookies, authorization headers, etc.)
 };
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Apply CORS middleware
 app.options('*', cors(corsOptions)); // Handle preflight requests
+
+// Add Access-Control-Allow-Origin header for all responses
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    next();
+});
 
 // API Endpoints
 app.get('/', (req, res) => res.send("API is running"));
