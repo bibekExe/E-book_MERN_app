@@ -1,5 +1,5 @@
 import express from "express";
-//import cors from "cors";
+import cors from "cors";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
@@ -12,23 +12,23 @@ import readLaterRouter from "./routes/readLaterRoutes.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Connect to MongoDB
+//Connect to MongoDB
 connectDB();
 const cors = require("cors");
-// Define allowed origins for CORS
-//const allowedOrigins = [
- // "http://localhost:5173",
- // "https://clinquant-cuchufli-da38a3.netlify.app", // Add deployed frontend URL
-//];
+ //Define allowed origins for CORS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://clinquant-cuchufli-da38a3.netlify.app", // Add deployed frontend URL
+];
 
-// Configure CORS options
-//app.use(
-  //cors({
-    //origin: "https://e-book-mern-app.vercel.app/",
-    //methods: ["GET", "POST", "UPDATE", "PUT"],
-   // Credentials: true,
- // })
-//);
+ //Configure CORS options
+app.use(
+  cors({
+    origin: "https://e-book-mern-app.vercel.app/",
+    methods: ["GET", "POST", "UPDATE", "PUT"],
+    Credentials: true,
+  })
+);
 
 // Middleware
 app.use(express.json());
