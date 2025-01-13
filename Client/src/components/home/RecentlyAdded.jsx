@@ -10,9 +10,17 @@ const RecentlyAdded = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Fetching recently added resources...");
         const response = await axios.get(
-          "https://e-book-mern-app.onrender.com/api/resource/get-recently-added-resource"
+          "https://e-book-mern-app.onrender.com/api/resource/get-recently-added-resource",
+          {
+            withCredentials: true, // Include credentials if required
+            headers: {
+              "Content-Type": "application/json", // Ensure proper content type
+            },
+          }
         );
+        console.log("Response data:", response.data); // Debug response data
         setData(response.data.data);
       } catch (error) {
         console.error("Error fetching recently added resources:", error);
