@@ -19,6 +19,7 @@ const cors = require("cors");
 const allowedOrigins = [
   "http://localhost:5173",
   "https://clinquant-cuchufli-da38a3.netlify.app", // Add deployed frontend URL
+  "https://e-book-mern-app.vercel.app/"
 ];
 
  //Configure CORS options
