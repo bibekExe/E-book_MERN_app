@@ -18,31 +18,38 @@ connectDB();
 // Define allowed origins for CORS
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://clinquant-cuchufli-da38a3.netlify.app', // Add deployed frontend URL
+    'https://clinquant-cuchufli-da38a3.netlify.app',
     'https://e-book-mern-app.vercel.app'
 ];
 
-// Configure CORS options
-const corsOptions = {
+// Middleware
+app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true); // Allow the origin
+            callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ['GET', 'POST'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    credentials: true // Enable credentials (cookies, authorization headers, etc.)
-};
-
-// Middleware
+    credentials: true, // Allow credentials
+}));
+app.options('*', (req, res) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET,POST');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        return res.sendStatus(204);
+    } else {
+        return res.status(403).send('CORS not allowed');
+    }
+});
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors(corsOptions)); // Apply CORS middleware
-app.options('*', cors(corsOptions)); // Handle preflight requests
 
-// Add Access-Control-Allow-Origin header for all responses
+// Global middleware for missing CORS headers
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
