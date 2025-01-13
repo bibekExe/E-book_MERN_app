@@ -17,7 +17,7 @@ const ViewResources = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/resource/get-resource-by-id/${id}`
+          `https://e-book-mern-app.onrender.com/api/resource/get-resource-by-id/${id}`
         );
         setData(response.data.data); // Set fetched data
       } catch (error) {
