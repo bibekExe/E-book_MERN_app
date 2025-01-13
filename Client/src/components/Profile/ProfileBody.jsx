@@ -6,25 +6,24 @@ const ProfileBody = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [activeSection, setActiveSection] = useState(""); // State to manage active section
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Retrieve the token from sessionStorage
         const token = sessionStorage.getItem("token");
         if (!token) {
           setError(true);
           return;
         }
 
-        // Fetch user data from the API
         const response = await axios.get("http://localhost:3000/api/user/data", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        setUserData(response.data.userData); // Update the state with user data
+        setUserData(response.data.userData);
       } catch (err) {
         console.error("Error fetching user data:", err);
         setError(true);
@@ -35,6 +34,46 @@ const ProfileBody = () => {
 
     fetchUserData();
   }, []);
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "profile":
+        return (
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-yellow-400 mb-6">
+              Welcome, {userData?.name}
+            </h1>
+            <div className="flex flex-col lg:flex-row items-center mb-8">
+              <img
+                src={userData?.avatar || "https://via.placeholder.com/150"}
+                alt="User Avatar"
+                className="w-24 h-24 lg:w-32 lg:h-32 rounded-full mb-4 lg:mb-0 lg:mr-6"
+              />
+              <div className="text-center lg:text-left">
+                <p className="text-xl lg:text-2xl font-semibold text-white">
+                  {userData?.name}
+                </p>
+                <p className="text-md lg:text-lg text-zinc-300">
+                  {userData?.email}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      case "readLater":
+        return <div className="text-lg text-white">Books added to read later...</div>;
+      case "downloads":
+        return <div className="text-lg text-white">Your downloaded items...</div>;
+      case "settings":
+        return <div className="text-lg text-white">Settings page...</div>;
+      default:
+        return (
+          <div className="text-lg text-zinc-300">
+            Select an option from the sidebar to view details.
+          </div>
+        );
+    }
+  };
 
   if (loading) {
     return (
@@ -53,19 +92,17 @@ const ProfileBody = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-zinc-900 text-white">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-zinc-900 text-white">
       {/* Sidebar */}
-      <div className="w-1/4 bg-zinc-800 p-4 flex flex-col items-center">
-        <Sidebar data={userData} />
+      <div
+        className="w-full lg:w-1/4 bg-zinc-800 p-4 flex flex-col"
+        style={{ transition: "all 0.3s ease" }}
+      >
+        <Sidebar setActiveSection={setActiveSection} />
       </div>
 
       {/* Main Content */}
-      <div className="w-3/4 p-8">
-        <h1 className="text-3xl font-bold text-yellow-400 mb-6">Welcome, {userData?.name}</h1>
-        <p className="text-lg text-zinc-300">
-          Here you can view your Read Later items, manage your downloads, and update your profile settings.
-        </p>
-      </div>
+      <div className="w-full lg:w-3/4 p-4 lg:p-8">{renderContent()}</div>
     </div>
   );
 };

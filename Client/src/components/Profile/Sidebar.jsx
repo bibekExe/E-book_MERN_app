@@ -1,61 +1,48 @@
-import { Link, useNavigate } from "react-router-dom";
-import { FaSignOutAlt } from "react-icons/fa"; // Use FaSignOutAlt instead
+import { FaSignOutAlt } from "react-icons/fa";
 
-const Sidebar = ({ userData }) => {
-  const navigate = useNavigate();
-
+const Sidebar = ({ setActiveSection }) => {
   const handleLogout = () => {
     sessionStorage.clear();
-    navigate("/login");
+    window.location.href = "/login";
   };
 
   return (
-    <div className="bg-zinc-800 p-4 rounded flex flex-col items-center justify-between h-auto lg:h-[100%]">
-      {/* User Profile Section */}
-      <div className="flex items-center flex-col justify-center">
-        <img
-          src={userData?.avatar || "https://via.placeholder.com/150"}
-          className="h-[12vh] rounded-full"
-          alt="User Avatar"
-        />
-        <p className="mt-3 text-xl text-zinc-100 font-semibold">
-          {userData?.name || "Guest"}
-        </p>
-        <p className="text-zinc-100 font-semibold text-sm">
-          {userData?.email || "No email provided"}
-        </p>
-        <div className="w-full mt-4 h-[1px] bg-zinc-500 hidden lg:block"></div>
-      </div>
-
+    <div className="w-full lg:w-full flex flex-col justify-between">
       {/* Navigation Links */}
-      <div className="w-full flex flex-col items-center justify-between mt-4">
-        <Link
-          to="/profile/read-later"
-          className="text-zinc-100 font-semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
+      <div className="flex flex-col">
+        <div
+          onMouseEnter={() => setActiveSection("profile")}
+          className="w-full py-4 px-6 text-white font-bold text-lg cursor-pointer hover:bg-yellow-500 hover:text-black transition-all duration-300"
+        >
+          Profile
+        </div>
+        <div
+          onMouseEnter={() => setActiveSection("readLater")}
+          className="w-full py-4 px-6 text-white font-bold text-lg cursor-pointer hover:bg-yellow-500 hover:text-black transition-all duration-300"
         >
           Read Later
-        </Link>
-        <Link
-          to="/profile/downloads"
-          className="text-zinc-100 font-semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
+        </div>
+        <div
+          onMouseEnter={() => setActiveSection("downloads")}
+          className="w-full py-4 px-6 text-white font-bold text-lg cursor-pointer hover:bg-yellow-500 hover:text-black transition-all duration-300"
         >
           Downloads
-        </Link>
-        <Link
-          to="/profile/settings"
-          className="text-zinc-100 font-semibold w-full text-center hover:bg-zinc-900 rounded transition-all duration-300 py-2"
+        </div>
+        <div
+          onMouseEnter={() => setActiveSection("settings")}
+          className="w-full py-4 px-6 text-white font-bold text-lg cursor-pointer hover:bg-yellow-500 hover:text-black transition-all duration-300"
         >
           Settings
-        </Link>
+        </div>
       </div>
 
-      {/* Logout Button */}
-      <button
-        className="bg-zinc-900 w-3/6 lg:w-full mt-4 lg:mt-0 text-white font-semibold flex items-center justify-center py-2 rounded hover:bg-white hover:text-zinc-800 transition-all duration-300"
+      {/* Logout Section */}
+      <div
         onClick={handleLogout}
+        className="w-full py-4 px-6 bg-red-600 text-white font-bold text-lg cursor-pointer hover:bg-red-700 hover:text-zinc-300 transition-all duration-300"
       >
-        Log Out <FaSignOutAlt className="ml-4" />
-      </button>
+        Log Out <FaSignOutAlt className="ml-2" />
+      </div>
     </div>
   );
 };

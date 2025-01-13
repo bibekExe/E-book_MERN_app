@@ -2,7 +2,7 @@
 
 const ReadLater = () => {
   return (
-    <div>ReadLater</div>
+    <div></div>
   )
 }
 
