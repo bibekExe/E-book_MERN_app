@@ -14,7 +14,7 @@ authRouter.post('/send-reset-otp',  sendResetOtp);
 authRouter.post('/reset-password',  resetPassword);
 authRouter.post('/admin',  adminLogin);
 authRouter.post('/admin-otp',  adminVerifyOtp);
-authRouter.get('/getuserbyid', getUserById)
+authRouter.get('/getuserbyid', getUserById);
 
 
 export default authRouter;

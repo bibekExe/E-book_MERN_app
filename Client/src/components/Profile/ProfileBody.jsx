@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
+import Settings from "./settings"; // Import Settings component
 
 const ProfileBody = () => {
   const [userData, setUserData] = useState(null);
@@ -65,7 +66,7 @@ const ProfileBody = () => {
       case "downloads":
         return <div className="text-lg text-white">Your downloaded items...</div>;
       case "settings":
-        return <div className="text-lg text-white">Settings page...</div>;
+        return <Settings />; // Render Settings component
       default:
         return (
           <div className="text-lg text-zinc-300">
@@ -102,7 +103,14 @@ const ProfileBody = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full lg:w-3/4 p-4 lg:p-8">{renderContent()}</div>
+      <div
+        className="w-full lg:w-3/4 p-4 lg:p-8"
+        style={{
+          transition: "all 0.3s ease",
+        }}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 };

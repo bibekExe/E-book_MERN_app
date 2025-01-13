@@ -28,6 +28,7 @@ const Sidebar = ({ setActiveSection }) => {
         >
           Downloads
         </div>
+        {/* Settings Section */}
         <div
           onMouseEnter={() => setActiveSection("settings")}
           className="w-full py-4 px-6 text-white font-bold text-lg cursor-pointer hover:bg-yellow-500 hover:text-black transition-all duration-300"
@@ -39,7 +40,7 @@ const Sidebar = ({ setActiveSection }) => {
       {/* Logout Section */}
       <div
         onClick={handleLogout}
-        className="w-full py-4 px-6 bg-red-600 text-white font-bold text-lg cursor-pointer hover:bg-red-700 hover:text-zinc-300 transition-all duration-300"
+        className="w-full py-4 px-6 bg-red-600 text-white font-bold text-lg cursor-pointer hover:bg-red-700 hover:text-zinc-300 transition-all duration-300 mt-2"
       >
         Log Out <FaSignOutAlt className="ml-2" />
       </div>
