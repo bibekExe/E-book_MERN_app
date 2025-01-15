@@ -18,7 +18,7 @@ connectDB();
 // Define allowed origins
 const allowedOrigins = [
   "http://localhost:5173", // Local development
-  "https://e-book-mern-app.vercel.app/", // Deployed Vercel frontend
+  "https://e-book-mern-app.vercel.app", // Deployed Vercel frontend
 ];
 
 // Configure CORS
@@ -27,25 +27,41 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true); // Allow the request
     } else {
+      console.error(`Blocked by CORS: ${origin}`); // Log blocked origins
       callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
   credentials: true, // Allow cookies or authentication headers
+  allowedHeaders: ["Content-Type", "Authorization", "auth-token"], // Specify allowed headers
 };
 
 // Apply CORS Middleware
-app.use(cors(corsOptions)); // Use restricted CORS options
+app.use(cors(corsOptions));
 
 // Middleware
 app.use(express.json()); // Parse JSON payloads
 app.use(cookieParser()); // Parse cookies
 
-// API Endpoints
+// Health Check Endpoint
 app.get("/", (req, res) => res.send("API is running"));
+
+// API Endpoints
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/resource", resourceRouter);
 app.use("/api/readlater", readLaterRouter);
 
-// Start the server
+// Handle 404 Errors
+app.use((req, res) => {
+  res.status(404).json({ error: "Endpoint not found" });
+});
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(`Error: ${err.message}`);
+  res.status(500).json({ error: err.message || "Internal Server Error" });
+});
+
+// Start the Server
 app.listen(port, () => console.log(`Server is running on port: ${port}`));
