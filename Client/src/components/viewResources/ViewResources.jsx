@@ -7,11 +7,11 @@ import { FaBookReader, FaFileDownload, FaReadme } from "react-icons/fa";
 
 const ViewResources = () => {
   const { id } = useParams(); // Extract resource ID from URL
-  const location = useLocation(); // Access state passed from ResourceCard
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userId = useSelector((state) => state.auth.userId); // Assuming user ID is in auth state
   const [notification, setNotification] = useState("");
 
   useEffect(() => {
@@ -32,9 +32,29 @@ const ViewResources = () => {
     fetchData();
   }, [id]);
 
-  const handleRestrictedAction = (actionName) => {
+  const addToReadLater = async () => {
     if (!isLoggedIn) {
-      setNotification(`You need to sign in to ${actionName}.`);
+      setNotification("You need to sign in to save this book to Read Later.");
+      setTimeout(() => setNotification(""), 3000);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/readlater/add-resource-to-read-later",
+        {},
+        {
+          headers: {
+            resourceid: id,
+            id: userId,
+          },
+        }
+      );
+      setNotification(response.data.message);
+    } catch (error) {
+      console.error("Error adding to Read Later:", error);
+      setNotification("Failed to add to Read Later. Please try again.");
+    } finally {
       setTimeout(() => setNotification(""), 3000);
     }
   };
@@ -59,7 +79,7 @@ const ViewResources = () => {
     data && (
       <div className="h-full w-full bg-zinc-900 flex flex-col items-start px-8 py-8">
         {notification && (
-          <div className="w-full max-w-lg mx-auto p-4 bg-red-500 text-white text-center font-bold rounded-lg mb-6">
+          <div className="w-full max-w-lg mx-auto p-4 bg-yellow-500 text-black text-center font-bold rounded-lg mb-6">
             {notification}
           </div>
         )}
@@ -85,51 +105,45 @@ const ViewResources = () => {
 
             <div className="mt-8 flex flex-wrap gap-6">
               <button
-                onClick={() => handleRestrictedAction("save the book to Read Later")}
-                className={`flex items-center gap-2 px-6 py-3 ${
-                  isLoggedIn
-                    ? "bg-yellow-500 hover:bg-yellow-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                } text-black font-bold rounded-lg transition-all duration-300 text-lg`}
+                onClick={addToReadLater}
+                className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg transition-all duration-300 text-lg"
               >
                 <FaBookReader size={20} />
                 Read Later
               </button>
 
               <button
-                onClick={() => handleRestrictedAction("download the book")}
-                className={`flex items-center gap-2 px-6 py-3 ${
-                  isLoggedIn
-                    ? "bg-blue-500 hover:bg-blue-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                } text-white font-bold rounded-lg transition-all duration-300 text-lg`}
-              >
-                <FaFileDownload size={20} />
-                Download
-              </button>
-
-              <button
                 onClick={() => {
-                  if (isLoggedIn) {
-                    if (data?.url) {
-                      window.location.href = data.url; // Redirect to the resource URL directly
-                    } else {
-                      setNotification("No valid link found for this resource.");
-                    }
+                  if (data?.url) {
+                    window.location.href = data.url; // Redirect to the resource URL directly
                   } else {
-                    handleRestrictedAction("read the book");
+                    setNotification("No valid link found for this resource.");
                   }
                 }}
-                className={`flex items-center gap-2 px-6 py-3 ${
-                  isLoggedIn
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                } text-white font-bold rounded-lg transition-all duration-300 text-lg`}
+                className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-all duration-300 text-lg"
               >
                 <FaReadme size={20} />
                 Read Now
               </button>
             </div>
+            <button
+  onClick={() => {
+    if (isLoggedIn) {
+      // Handle download logic
+      window.open(data.url, "_blank"); // Example: Open the file in a new tab
+    } else {
+      setNotification("You need to sign in to download the resource.");
+    }
+  }}
+  className={`flex items-center gap-2 px-6 py-3 ${
+    isLoggedIn
+      ? "bg-blue-500 hover:bg-blue-600"
+      : "bg-gray-400 cursor-not-allowed"
+  } text-white font-bold rounded-lg transition-all duration-300 text-lg`}
+>
+  <FaFileDownload size={20} />
+  Download
+</button>
           </div>
         </div>
       </div>
