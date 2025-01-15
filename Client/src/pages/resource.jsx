@@ -17,7 +17,7 @@ const Resource = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://e-book-mern-app.onrender.com/api/resource/get-all-resource"
+          "http://localhost:3000/api/resource/get-all-resource"
         );
         setData(response.data.data);
         setFilteredData(response.data.data); // Set initial filtered data
