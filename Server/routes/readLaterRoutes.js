@@ -5,12 +5,12 @@ import { addReadLater, deleteFromReadLater, getReadLater } from '../controllers/
 const readLaterRouter = express.Router();
 
 // Add resource to "Read Later"
-readLaterRouter.put('/add-resource-to-read-later', addReadLater);
+readLaterRouter.put('/add-resource-to-read-later', userAuth, addReadLater);
 
 // Delete resource from "Read Later"
-readLaterRouter.post('/delete-resource-from-read-later',  deleteFromReadLater);
+readLaterRouter.post('/delete-resource-from-read-later', userAuth, deleteFromReadLater);
 
 // Fetch all "Read Later" resources
-readLaterRouter.get('/fetch-all-resource-from-read-later',  getReadLater);
+readLaterRouter.get('/fetch-all-resource-from-read-later', userAuth, getReadLater);
 
 export default readLaterRouter;
