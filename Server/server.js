@@ -13,12 +13,12 @@ const port = process.env.PORT || 3000;
 
 // Connect to MongoDB
 connectDB();
-http://localhost:3000
+https://e-book-mern-app.onrender.com
 
 // Middleware to set the specific CORS header
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://legal-read.vercel.app");
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Origin", "https://e-book-mern-app.onrender.com");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, auth-token");
   res.setHeader("Access-Control-Allow-Credentials", "true");
