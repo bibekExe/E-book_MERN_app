@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import cors from "cors"; // Import cors middleware
 import connectDB from "./config/mongodb.js";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
@@ -13,23 +14,24 @@ const port = process.env.PORT || 3000;
 
 // Connect to MongoDB
 connectDB();
-http://localhost:3000
 
-// Middleware to set the specific CORS header
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://legal-read.vercel.app");
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173'");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, auth-token");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+// CORS Middleware Configuration
+const allowedOrigins = ["https://legal-read.vercel.app", "http://localhost:5173"];
 
-  // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
-
-  next();
-});
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allow credentials
+  })
+);
 
 // Middleware
 app.use(express.json());
