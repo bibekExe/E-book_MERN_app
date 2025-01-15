@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
@@ -15,38 +14,27 @@ const port = process.env.PORT || 3000;
 // Connect to MongoDB
 connectDB();
 
-// Define allowed origins
-const allowedOrigins = [
-  "http://localhost:5173", // Local development
-  "https://e-book-mern-app.vercel.app", // Deployed Vercel frontend
-];
+// Middleware to set the specific CORS header
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://legal-read.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, auth-token");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-// Configure CORS
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow the request
-    } else {
-      console.error(`Blocked by CORS: ${origin}`); // Log blocked origins
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
-  credentials: true, // Allow cookies or authentication headers
-  allowedHeaders: ["Content-Type", "Authorization", "auth-token"], // Specify allowed headers
-};
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
 
-// Apply CORS Middleware
-app.use(cors(corsOptions));
+  next();
+});
 
 // Middleware
-app.use(express.json()); // Parse JSON payloads
-app.use(cookieParser()); // Parse cookies
-
-// Health Check Endpoint
-app.get("/", (req, res) => res.send("API is running"));
+app.use(express.json());
+app.use(cookieParser());
 
 // API Endpoints
+app.get("/", (req, res) => res.send("API is running"));
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/resource", resourceRouter);
@@ -63,5 +51,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || "Internal Server Error" });
 });
 
-// Start the Server
+// Start the server
 app.listen(port, () => console.log(`Server is running on port: ${port}`));
