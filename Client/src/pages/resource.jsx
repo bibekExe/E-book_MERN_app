@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Loader from "../components/Loder";
 import ResourceCard from "../components/ResourceCard/ResourceCard";
 import axios from "axios";
@@ -21,6 +21,7 @@ const Resource = () => {
         );
         setData(response.data.data);
         setFilteredData(response.data.data); // Set initial filtered data
+        console.log("Fetched Data:", response.data.data); // Debug fetched data
       } catch (error) {
         console.error("Error fetching resources:", error);
       } finally {
@@ -32,19 +33,31 @@ const Resource = () => {
   }, []);
 
   useEffect(() => {
-    // Filter logic based on search term and category
+    // Normalize categories for case-insensitive filtering
+    const normalizedSelectedCategory = selectedCategory.toLowerCase();
     const lowerSearchTerm = searchTerm.toLowerCase();
+
     const filtered = data.filter((item) => {
+      const normalizedCategory = item.category.toLowerCase();
+
+      // Debug category matching
+      console.log("Item category:", normalizedCategory);
+      console.log("Selected category:", normalizedSelectedCategory);
+
+      const matchesCategory =
+        normalizedSelectedCategory === "all" || normalizedCategory === normalizedSelectedCategory;
+
       const matchesSearch =
         item.title.toLowerCase().includes(lowerSearchTerm) ||
         item.author.toLowerCase().includes(lowerSearchTerm) ||
-        item.category.toLowerCase().includes(lowerSearchTerm);
+        normalizedCategory.includes(lowerSearchTerm);
 
-      const matchesCategory =
-        selectedCategory === "All" || item.category === selectedCategory;
-
-      return matchesSearch && matchesCategory;
+      return matchesCategory && matchesSearch;
     });
+
+    // Debug filtered data
+    console.log("Filtered Data:", filtered);
+
     setFilteredData(filtered);
   }, [searchTerm, selectedCategory, data]);
 
@@ -73,7 +86,10 @@ const Resource = () => {
                 ? "bg-yellow-400 text-black"
                 : "bg-gray-700 text-white"
             }`}
-            onClick={() => setSelectedCategory(category)}
+            onClick={() => {
+              console.log(`User clicked category: ${category}`); // Debug user click
+              setSelectedCategory(category);
+            }}
           >
             <TbCategory />
             <span>{category}</span>
@@ -90,7 +106,10 @@ const Resource = () => {
         <div className="my-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {/* Display Filtered Data */}
           {filteredData.length > 0 ? (
-            filteredData.map((item, i) => <ResourceCard key={i} data={item} />)
+            filteredData.map((item, i) => {
+              console.log("Filtered item:", item); // Debug filtered data
+              return <ResourceCard key={i} data={item} />;
+            })
           ) : (
             <p className="text-yellow-400">No resources found</p>
           )}

@@ -260,3 +260,36 @@ export const getResourceById = async (req, res) => {
     }
 };
 
+
+
+// Get resources by category
+export const getResourceByCategory = async (req, res) => {
+    try {
+        // Extract the category from the query parameters
+        const { category } = req.query;
+
+        // Validate that a category is provided
+        if (!category) {
+            return res.status(400).json({ message: "Category is required" });
+        }
+
+        // Fetch resources matching the category (case-insensitive)
+        const resources = await resourceModel.find({
+            category: { $regex: new RegExp(`^${category}$`, "i") }, // Match entire category, ignoring case
+        });
+
+        // Check if resources exist for the given category
+        if (resources.length === 0) {
+            return res.status(404).json({ message: `No resources found for category: ${category}` });
+        }
+
+        // Return the filtered resources
+        return res.status(200).json({
+            status: "Success",
+            data: resources,
+        });
+    } catch (error) {
+        console.error("Error fetching resources by category:", error.message);
+        return res.status(500).json({ message: "An error occurred while fetching resources", error: error.message });
+    }
+};
