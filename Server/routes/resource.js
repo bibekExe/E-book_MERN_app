@@ -11,7 +11,7 @@ resourceRouter.post('/delete-resource', userAuth, deleteResource);
 resourceRouter.get('/get-all-resource', getAllResource);
 resourceRouter.get('/get-recently-added-resource', getRecentlyAddedResources);
 resourceRouter.get('/get-resource-by-id/:id', getResourceById);
-resourceRouter.get('/category', getResourceByCategory);
+resourceRouter.post('/category', getResourceByCategory);
 
 
 
