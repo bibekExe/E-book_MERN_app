@@ -3,6 +3,7 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import Settings from "./settings"; // Import Settings component
 import UnderConstruction from "../UnderConstruction";
+import ReadLater from "./ReadLater.jsx"; // Import ReadLater component
 
 const ProfileBody = () => {
   const [userData, setUserData] = useState(null);
@@ -58,12 +59,16 @@ const ProfileBody = () => {
                 <p className="text-md lg:text-lg text-zinc-300">
                   {userData?.email}
                 </p>
+                {/* Display User ID */}
+                <p className="text-md lg:text-lg text-zinc-300">
+                  User ID: {userData?.id}
+                </p>
               </div>
             </div>
           </div>
         );
       case "readLater":
-        return <UnderConstruction />; // Render UnderConstruction for Read Later
+        return <ReadLater />;  // Return the ReadLater component
       case "downloads":
         return <UnderConstruction />; // Render UnderConstruction for Downloads
       case "settings":
