@@ -7,7 +7,7 @@ import { FaBookReader, FaFileDownload, FaReadme } from "react-icons/fa";
 
 const ViewResources = () => {
   const { id } = useParams(); // Extract resource ID from the URL
-  const location = useLocation();
+  const location = useLocation(); // Access location state
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -16,7 +16,6 @@ const ViewResources = () => {
   const [userData, setUserData] = useState(null); // State to hold user data
 
   useEffect(() => {
-    // Fetch user data when the component mounts
     const fetchUserData = async () => {
       try {
         const token = sessionStorage.getItem("token");
@@ -52,7 +51,6 @@ const ViewResources = () => {
     fetchData();
   }, [id]);
 
- 
   const headers = userData
     ? {
         id: userData.id, 
@@ -60,7 +58,6 @@ const ViewResources = () => {
         resourceId: id, 
       }
     : {};
-    console.log(headers)
 
   const handleReadLater = async () => {
     try {
@@ -72,6 +69,19 @@ const ViewResources = () => {
       setNotification(response.data.message || "Added to Read Later!");
     } catch (error) {
       setNotification("Failed to add to Read Later.");
+    }
+  };
+
+  const handleRemoveFromReadLater = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3000/api/readlater/remove-resource-from-read-later",
+        {},
+        { headers }
+      );
+      setNotification(response.data.message || "Removed from Read Later!");
+    } catch (error) {
+      setNotification("Failed to remove from Read Later.");
     }
   };
 
@@ -122,13 +132,26 @@ const ViewResources = () => {
             <div className="mt-8 flex flex-wrap gap-6">
               {isLoggedIn ? (
                 <>
-                  <button
-                    className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg transition-all duration-300 text-lg"
-                    onClick={handleReadLater}
-                  >
-                    <FaBookReader size={20} />
-                    Read Later
-                  </button>
+                  {location.state?.fromReadLater ? (
+                    <>
+                      <button
+                        className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg transition-all duration-300 text-lg"
+                        onClick={handleRemoveFromReadLater}
+                      >
+                        Remove from Read Later
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg transition-all duration-300 text-lg"
+                        onClick={handleReadLater}
+                      >
+                        <FaBookReader size={20} />
+                        Read Later
+                      </button>
+                    </>
+                  )}
 
                   <button
                     className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg transition-all duration-300 text-lg"
