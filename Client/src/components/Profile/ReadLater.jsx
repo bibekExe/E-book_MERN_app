@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { FaFileDownload, FaReadme } from "react-icons/fa";
+import { MdBookmarkRemove } from "react-icons/md";
 
 const ReadLater = () => {
   const [userData, setUserData] = useState(null); // State to store user info
@@ -59,6 +60,30 @@ const ReadLater = () => {
     fetchReadLaterResources();
   }, [userData]); // This useEffect will run when userData changes
 
+  const handleRemoveResource = async (resourceId) => {
+    const token = sessionStorage.getItem("token");
+    const headers = {
+      authorization: `Bearer ${token}`,
+      id: userData?.id,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/readlater/delete-resource-from-read-later",
+        { resourceId },
+        { headers }
+      );
+      console.log(response)
+      // Remove the resource from the state after successful deletion
+      setReadLaterResources((prevResources) =>
+        prevResources.filter((resource) => resource._id !== resourceId)
+      );
+      console.log("Resource removed successfully:", response.data);
+    } catch (err) {
+      console.error("Error removing resource:", err);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -73,15 +98,20 @@ const ReadLater = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {readLaterResources.length > 0 ? (
           readLaterResources.map((resource) => (
-            <div key={resource._id} className="bg-zinc-800 p-4 rounded-lg shadow-lg">
+            <div
+              key={resource._id}
+              className="bg-zinc-800 p-4 rounded-lg shadow-lg flex flex-col"
+            >
               <img
                 src={resource.image || "https://via.placeholder.com/150"}
                 alt={resource.title}
                 className="w-full h-40 object-cover rounded-md"
               />
               <h5 className="text-xl text-white font-semibold mt-4">{resource.title}</h5>
-              <p className="text-sm text-zinc-400 mt-2">{resource.description || "No description available"}</p>
-              <div className="mt-4 flex justify-between gap-4">
+              <p className="text-sm text-zinc-400 mt-2">
+                {resource.description || "No description available"}
+              </p>
+              <div className="mt-4 flex flex-wrap justify-between gap-4">
                 {/* Read Now button */}
                 <button
                   onClick={() => {
@@ -110,6 +140,15 @@ const ReadLater = () => {
                 >
                   <FaFileDownload size={20} />
                   Download
+                </button>
+
+                {/* Remove button */}
+                <button
+                  onClick={() => handleRemoveResource(resource._id)}
+                  className="flex items-center gap-2 px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-all duration-300"
+                >
+                  <MdBookmarkRemove size={20} />
+                  Remove
                 </button>
               </div>
             </div>

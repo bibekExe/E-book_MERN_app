@@ -52,12 +52,12 @@ const ViewResources = () => {
     fetchData();
   }, [id]);
 
-  // Set headers with user data once it is available
+ 
   const headers = userData
     ? {
-        id: userData.id, // Use userData.id here
+        id: userData.id, 
         authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        resourceId: id, // Assuming id is available in the scope
+        resourceId: id, 
       }
     : {};
     console.log(headers)
