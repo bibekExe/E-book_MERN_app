@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaFileDownload, FaReadme } from "react-icons/fa";
 
 const ReadLater = () => {
   const [userData, setUserData] = useState(null); // State to store user info
@@ -69,16 +70,50 @@ const ReadLater = () => {
   return (
     <div>
       <h4 className="text-3xl text-yellow-200 mb-8">Read Later</h4>
-      <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {readLaterResources.length > 0 ? (
-          <div>
-            {readLaterResources.map((resource) => (
-              <div key={resource._id}>
-                <p>{resource.title}</p>
-                {/* Display more resource information here */}
+          readLaterResources.map((resource) => (
+            <div key={resource._id} className="bg-zinc-800 p-4 rounded-lg shadow-lg">
+              <img
+                src={resource.image || "https://via.placeholder.com/150"}
+                alt={resource.title}
+                className="w-full h-40 object-cover rounded-md"
+              />
+              <h5 className="text-xl text-white font-semibold mt-4">{resource.title}</h5>
+              <p className="text-sm text-zinc-400 mt-2">{resource.description || "No description available"}</p>
+              <div className="mt-4 flex justify-between gap-4">
+                {/* Read Now button */}
+                <button
+                  onClick={() => {
+                    if (resource.url) {
+                      window.location.href = resource.url; // Redirect to the resource URL directly
+                    } else {
+                      console.error("No valid link found for this resource.");
+                    }
+                  }}
+                  className="flex items-center gap-2 px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-all duration-300"
+                >
+                  <FaReadme size={20} />
+                  Read Now
+                </button>
+
+                {/* Download button */}
+                <button
+                  onClick={() => {
+                    if (resource.downloadUrl) {
+                      window.location.href = resource.downloadUrl; // Redirect to download URL
+                    } else {
+                      console.error("No valid download link found for this resource.");
+                    }
+                  }}
+                  className="flex items-center gap-2 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg transition-all duration-300"
+                >
+                  <FaFileDownload size={20} />
+                  Download
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          ))
         ) : (
           <p>No resources in your Read Later list.</p>
         )}
